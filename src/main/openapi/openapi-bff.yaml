@@ -129,7 +129,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          bookmark:
+          product:
             - read
       tags:
         - imagesInternal
