@@ -1,0 +1,485 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-product-store external service
+  version: 1.0.0
+servers:
+  - url: "http://onecx-product-store:8080"
+tags:
+  - name: products
+paths:
+  /v1/products/{name}:
+    get:
+      security:
+        - oauth2: [ ocx-ps:read ]
+      tags:
+        - products
+      description: Get product by name
+      operationId: getProductByName
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Corresponding product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "404":
+          description: Product not found
+  /v1/products/load:
+    post:
+      security:
+        - oauth2: [ ocx-ps:read ]
+      tags:
+        - products
+      description: load products by criteria
+      operationId: loadProductsByCriteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductItemLoadSearchCriteria'
+      responses:
+        "200":
+          description: Page result matching given criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsLoadResult'
+        "404":
+          description: Product not found
+  /v1/products/load/shell:
+    post:
+      security:
+        - oauth2: [ ocx-ps:read ]
+      tags:
+        - products
+      description: load products and microfrontends by names (shell request)
+      operationId: loadProductsByNames
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoadProductRequest'
+      responses:
+        "200":
+          description: Result matching given request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoadProductResponse'
+        "404":
+          description: Product not found
+  /v1/products/search:
+    post:
+      security:
+        - oauth2: [ ocx-ps:read ]
+      tags:
+        - products
+      description: Search for products by search criteria
+      operationId: searchProductsByCriteria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductItemSearchCriteria'
+      responses:
+        "200":
+          description: Corresponding products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductItemPageResult'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /v1/image/{refId}/logo:
+    get:
+      security:
+        - oauth2: [ ocx-ps:read ]
+      tags:
+        - images
+      description: Get Image by id
+      operationId: getProductLogo
+      parameters:
+        - name: refId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-ps:read: Grants read access
+  schemas:
+    ProductItemPageResult:
+      type: object
+      properties:
+        totalElements:
+          format: int64
+          description: The total elements in the resource.
+          type: integer
+        number:
+          format: int32
+          type: integer
+        size:
+          format: int32
+          type: integer
+        totalPages:
+          format: int64
+          type: integer
+        stream:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductItem'
+    ProductItemSearchCriteria:
+      type: object
+      properties:
+        productNames:
+          type: array
+          items:
+            type: string
+        pageNumber:
+          format: int32
+          description: The number of page.
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 100
+          maximum: 1000
+          type: integer
+    LoadProductRequest:
+      type: object
+      required:
+        - productNames
+      properties:
+        productNames:
+          type: array
+          items:
+            minItems: 1
+            type: string
+    LoadProductResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoadProductItem'
+    LoadProductItem:
+      type: object
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        microfrontends:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoadProductMicrofrontend'
+    LoadProductMicrofrontend:
+      type: object
+      properties:
+        remoteName:
+          type: string
+        remoteBaseUrl:
+          type: string
+        appId:
+          type: string
+        exposedModule:
+          type: string
+        technology:
+          type: string
+        remoteEntry:
+          type: string
+        tagName:
+          type: string
+        type:
+          $ref: "#/components/schemas/MicrofrontendType"
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/UIEndpoint'
+    ProductItemLoadSearchCriteria:
+      type: object
+      properties:
+        productNames:
+          type: array
+          items:
+            type: string
+        pageNumber:
+          format: int32
+          description: The number of page.
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 100
+          maximum: 1000
+          type: integer
+    Product:
+      type: object
+      required:
+        - name
+        - basePath
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        basePath:
+          type: string
+        displayName:
+          type: string
+        iconName:
+          type: string
+        classifications:
+          type: string
+        undeployed:
+          type: boolean
+        microfrontends:
+          type: array
+          items:
+            $ref: '#/components/schemas/Microfrontend'
+        microservices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Microservice'
+    Microfrontend:
+      type: object
+      properties:
+        remoteName:
+          type: string
+        tagName:
+          type: string
+        appId:
+          type: string
+        appVersion:
+          type: string
+        appName:
+          type: string
+        description:
+          type: string
+        remoteBaseUrl:
+          type: string
+        remoteEntry:
+          type: string
+        technology:
+          type: string
+        classifications:
+          type: string
+        contact:
+          type: string
+        iconName:
+          type: string
+        note:
+          type: string
+        exposedModule:
+          type: string
+        deprecated:
+          type: boolean
+        undeployed:
+          type: boolean
+        type:
+          $ref: "#/components/schemas/MicrofrontendType"
+        endpoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/UIEndpoint"
+    Microservice:
+      type: object
+      properties:
+        name:
+          type: string
+        appId:
+          type: string
+        version:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        undeployed:
+          type: boolean
+    UIEndpoint:
+      required:
+        - path
+        - name
+      type: object
+      properties:
+        path:
+          type: string
+        name:
+          type: string
+    ProductItem:
+      type: object
+      required:
+        - name
+        - basePath
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        basePath:
+          type: string
+        classifications:
+          type: string
+        undeployed:
+          type: boolean
+    ProductsLoadResult:
+      type: object
+      properties:
+        totalElements:
+          format: int64
+          description: The total elements in the resource.
+          type: integer
+        number:
+          format: int32
+          type: integer
+        size:
+          format: int32
+          type: integer
+        totalPages:
+          format: int64
+          type: integer
+        stream:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductsAbstract'
+    ProductsAbstract:
+      type: object
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        basePath:
+          type: string
+        classifications:
+          type: string
+        undeployed:
+          type: boolean
+        microfrontends:
+          type: array
+          items:
+            $ref: '#/components/schemas/MicrofrontendAbstract'
+        microservices:
+          type: array
+          items:
+            $ref: '#/components/schemas/MicroserviceAbstract'
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlotAbstract'
+    MicrofrontendAbstract:
+      type: object
+      properties:
+        appId:
+          type: string
+        appName:
+          type: string
+        undeployed:
+          type: boolean
+        deprecated:
+          type: boolean
+        type:
+          $ref: "#/components/schemas/MicrofrontendType"
+        exposedModule:
+          type: string
+    MicroserviceAbstract:
+      type: object
+      properties:
+        appId:
+          type: string
+        appName:
+          type: string
+        undeployed:
+          type: boolean
+    MicrofrontendType:
+      type: string
+      enum: [ MODULE, COMPONENT ]
+    SlotAbstract:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        deprecated:
+          type: boolean
+          default: false
+        undeployed:
+          type: boolean
+          default: false
+    ProblemDetailResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        detail:
+          type: string
+        params:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailParam'
+        invalidParams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    ProblemDetailParam:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string

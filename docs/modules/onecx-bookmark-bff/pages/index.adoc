@@ -1,0 +1,8 @@
+include::onecx-bookmark-bff-attributes.adoc[opts=optional]
+
+== onecx-bookmark-bff
+
+include::docs.adoc[opts=optional]
+
+
+include::onecx-bookmark-bff-docs.adoc[opts=optional]
