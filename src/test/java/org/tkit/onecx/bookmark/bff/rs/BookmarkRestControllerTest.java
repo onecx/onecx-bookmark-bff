@@ -2,6 +2,7 @@ package org.tkit.onecx.bookmark.bff.rs;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.Response.Status.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.JsonBody;
+import org.mockserver.model.MediaType;
 import org.tkit.onecx.bookmark.bff.rs.controller.BookmarkRestController;
 
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.*;
@@ -91,7 +93,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                         .withMethod(HttpMethod.POST))
                 .withPriority(100)
                 .withId(MOCK_ID)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                .respond(httpRequest -> response().withStatusCode(OK.getStatusCode())
                         .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(bookmarkPageResult)));
 
@@ -110,7 +112,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                 .body(bookmarkSearchCriteriaDTO)
                 .post("/search")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode())
+                .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract().as(BookmarkPageResultDTO.class);
 
@@ -138,7 +140,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                         .withMethod(HttpMethod.POST))
                 .withPriority(100)
                 .withId(MOCK_ID)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                .respond(httpRequest -> response().withStatusCode(OK.getStatusCode())
                         .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(bookmarkPageResult)));
 
@@ -172,6 +174,8 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         UpdateBookmarkDTO updateBookmarkDTO = new UpdateBookmarkDTO();
         updateBookmarkDTO.setDisplayName("newDisplayName");
         updateBookmarkDTO.setModificationCount(1);
+        updateBookmarkDTO.setPosition(1);
+        updateBookmarkDTO.setId("82689h23-9624-2234-c50b-8749d073c287");
 
         given()
                 .when()
@@ -240,6 +244,79 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
     }
 
     @Test
+    void updateOrderTest() {
+        UpdateBookmark bookmark = new UpdateBookmark();
+        bookmark.setDisplayName("name");
+        bookmark.setPosition(1);
+        bookmark.setModificationCount(1);
+
+        UpdateBookmark bookmark2 = new UpdateBookmark();
+        bookmark2.setDisplayName("name2");
+        bookmark2.setPosition(2);
+        bookmark2.setModificationCount(2);
+
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/bookmarks/11-111").withMethod(HttpMethod.PUT)
+                .withContentType(MediaType.APPLICATION_JSON)
+                .withBody(JsonBody.json(bookmark)))
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response().withStatusCode(CREATED.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(bookmark)));
+
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/bookmarks/22-222").withMethod(HttpMethod.PUT)
+                .withContentType(MediaType.APPLICATION_JSON)
+                .withBody(JsonBody.json(bookmark2)))
+                .withId("mock2")
+                .respond(httpRequest -> response().withStatusCode(CREATED.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(bookmark2)));
+
+        UpdateBookmarkDTO updateBookmarkDTO = new UpdateBookmarkDTO();
+        updateBookmarkDTO.setPosition(1);
+        updateBookmarkDTO.setDisplayName("name");
+        updateBookmarkDTO.setId("11-111");
+        updateBookmarkDTO.setModificationCount(1);
+
+        UpdateBookmarkDTO updateBookmarkDTO2 = new UpdateBookmarkDTO();
+        updateBookmarkDTO2.setPosition(2);
+        updateBookmarkDTO2.setDisplayName("name2");
+        updateBookmarkDTO2.setId("22-222");
+        updateBookmarkDTO2.setModificationCount(2);
+
+        BookmarkReorderRequestDTO reorderRequestDTO = new BookmarkReorderRequestDTO();
+        reorderRequestDTO.setBookmarks(List.of(updateBookmarkDTO, updateBookmarkDTO2));
+
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .body(reorderRequestDTO)
+                .contentType(APPLICATION_JSON)
+                .post("/reorder")
+                .then()
+                .statusCode(OK.getStatusCode());
+        mockServerClient.clear("mock2");
+        mockServerClient.clear(MOCK_ID);
+    }
+
+    @Test
+    void updateOrderEmptyBodyTest() {
+        BookmarkReorderRequestDTO reorderRequestDTO = new BookmarkReorderRequestDTO();
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .body(reorderRequestDTO)
+                .contentType(APPLICATION_JSON)
+                .post("/reorder")
+                .then()
+                .statusCode(BAD_REQUEST.getStatusCode());
+
+    }
+
+    @Test
     void errorSecurityTest() {
         String id = "82689h23-9624-2234-c50b-8749d073c287";
 
@@ -282,6 +359,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmark.setQuery(query);
         bookmark.setHash(hash);
         bookmark.setScope(scope);
+        bookmark.setPosition(1);
         return bookmark;
     }
 
@@ -298,6 +376,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmarkDTO.setQuery(query);
         bookmarkDTO.setHash(hash);
         bookmarkDTO.setScope(scope);
+        bookmarkDTO.setPosition(1);
         return bookmarkDTO;
     }
 
@@ -314,6 +393,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmark.setQuery(query);
         bookmark.setHash(hash);
         bookmark.setScope(scope);
+        bookmark.setPosition(1);
         return bookmark;
     }
 

@@ -63,10 +63,21 @@ public class BookmarkRestController implements BookmarksInternalApiService {
 
     @Override
     public Response updateBookmark(String id, UpdateBookmarkDTO updateBookmarkDTO) {
-
         try (Response response = client.updateBookmark(id, bookmarkMapper.map(updateBookmarkDTO))) {
             return Response.status(response.getStatus()).build();
         }
+    }
+
+    @Override
+    public Response updateBookmarksOrder(BookmarkReorderRequestDTO bookmarkReorderRequestDTO) {
+        if (!bookmarkReorderRequestDTO.getBookmarks().isEmpty()) {
+            for (UpdateBookmarkDTO bookmarkDTO : bookmarkReorderRequestDTO.getBookmarks()) {
+                client.updateBookmark(bookmarkDTO.getId(),
+                        bookmarkMapper.map(bookmarkDTO)).close();
+            }
+            return Response.status(Response.Status.OK).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @ServerExceptionMapper
