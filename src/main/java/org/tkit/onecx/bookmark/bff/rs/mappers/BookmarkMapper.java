@@ -20,5 +20,11 @@ public interface BookmarkMapper {
     @Mapping(target = "removeEndpointParametersItem", ignore = true)
     BookmarkDTO map(Bookmark bookmark);
 
+    @Mapping(target = "scope", ignore = true)
     UpdateBookmark map(UpdateBookmarkDTO updateBookmarkDTO);
+
+    @Mapping(target = "position", ignore = true)
+    @Mapping(target = "displayName", ignore = true)
+    @Mapping(target = "scope", constant = "PUBLIC")
+    UpdateBookmark convert(UpdateBookmarkDTO convertBookmarkDTO);
 }
