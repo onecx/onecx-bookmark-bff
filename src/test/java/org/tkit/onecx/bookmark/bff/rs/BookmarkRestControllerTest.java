@@ -121,6 +121,43 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
     }
 
     @Test
+    void searchUserBookmarksByCriteria() {
+
+        BookmarkPageResult pageResult = new BookmarkPageResult();
+        pageResult.setStream(
+                List.of(new Bookmark().scope(Bookmark.ScopeEnum.PRIVATE).displayName("bookmark1").workspaceName("workspace1")));
+        pageResult.setSize(1);
+        pageResult.setTotalPages(1L);
+        pageResult.setTotalElements(1L);
+
+        BookmarkSearchCriteria criteria = new BookmarkSearchCriteria();
+        criteria.setWorkspaceName("workspace1");
+
+        mockServerClient
+                .when(request().withPath(BOOKMARK_SVC_INTERNAL_API_BASE_PATH + "/user")
+                        .withMethod(HttpMethod.POST).withBody(JsonBody.json(criteria)))
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response().withStatusCode(OK.getStatusCode())
+                        .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(pageResult)));
+
+        BookmarkSearchCriteriaDTO bookmarkSearchCriteriaDTO = new BookmarkSearchCriteriaDTO();
+        bookmarkSearchCriteriaDTO.setWorkspaceName("workspace1");
+
+        var res = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(bookmarkSearchCriteriaDTO)
+                .post("/user")
+                .then()
+                .statusCode(OK.getStatusCode()).extract().as(BookmarkPageResultDTO.class);
+
+        Assertions.assertEquals(1, res.getStream().size());
+    }
+
+    @Test
     void searchBookmarksByCriteria_shouldReturnRequestError_whenCriteriaAreMissing() {
 
         BookmarkPageResult bookmarkPageResult = new BookmarkPageResult();
@@ -187,6 +224,34 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
+    }
+
+    @Test
+    void convertBookmark() {
+        String id = "82689h23-9624-2234-c50b-8749d073c287";
+
+        mockServerClient
+                .when(request().withPath(BOOKMARK_SVC_INTERNAL_API_BASE_PATH + "/" + id)
+                        .withMethod(HttpMethod.PUT))
+                .withPriority(100)
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
+
+        UpdateBookmarkDTO updateBookmarkDTO = new UpdateBookmarkDTO();
+        updateBookmarkDTO.setModificationCount(1);
+        updateBookmarkDTO.setDisplayName("test");
+        updateBookmarkDTO.setPosition(1);
+        updateBookmarkDTO.setId("82689h23-9624-2234-c50b-8749d073c287");
+
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(updateBookmarkDTO)
+                .post("/convert")
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

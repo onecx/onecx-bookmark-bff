@@ -70,6 +70,10 @@ app:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests
+          product:
+            read: permission on all GET requests and POST search
+          scope:
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
     keycloak:
       client:
         enabled: true
@@ -79,20 +83,7 @@ app:
 
 ----
 
-          defaultClientScopes: [ ocx-bm:all, ocx-pm:read ]
-
-----
-
-pm:read ]
-
-----
-
-ission:
-      enabled: true
-      spec:
-        permissions:
-          bookmark:
-            read: permission on all GET requests and POST search
+all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests
           product:

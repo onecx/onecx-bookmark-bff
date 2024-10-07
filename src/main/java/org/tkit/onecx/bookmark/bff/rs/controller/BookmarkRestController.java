@@ -39,6 +39,14 @@ public class BookmarkRestController implements BookmarksInternalApiService {
     ExceptionMapper exceptionMapper;
 
     @Override
+    public Response convertBookmark(UpdateBookmarkDTO updateBookmarkDTO) {
+        try (Response response = client.updateBookmark(updateBookmarkDTO.getId(),
+                bookmarkMapper.convert(updateBookmarkDTO))) {
+            return Response.status(response.getStatus()).build();
+        }
+    }
+
+    @Override
     public Response createNewBookmark(CreateBookmarkDTO createBookmarkDTO) {
         try (Response response = client.createNewBookmark(bookmarkMapper.map(createBookmarkDTO))) {
             return Response.status(response.getStatus()).build();
@@ -58,6 +66,15 @@ public class BookmarkRestController implements BookmarksInternalApiService {
             BookmarkPageResult bookmarkPageResult = response.readEntity(BookmarkPageResult.class);
             BookmarkPageResultDTO bookmarkPageResultDTO = bookmarkMapper.map(bookmarkPageResult);
             return Response.status(response.getStatus()).entity(bookmarkPageResultDTO).build();
+        }
+    }
+
+    @Override
+    public Response searchUserBookmarksByCriteria(BookmarkSearchCriteriaDTO bookmarkSearchCriteriaDTO) {
+        try (Response response = client.searchUserBookmarksByCriteria(bookmarkMapper.map(bookmarkSearchCriteriaDTO))) {
+            BookmarkPageResult userBookmarkPageResult = response.readEntity(BookmarkPageResult.class);
+            BookmarkPageResultDTO bookmarkPageResultDTO = bookmarkMapper.map(userBookmarkPageResult);
+            return Response.status(Response.Status.OK).entity(bookmarkPageResultDTO).build();
         }
     }
 
