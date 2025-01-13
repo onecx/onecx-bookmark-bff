@@ -83,9 +83,9 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmarkPageResult.setSize(50);
         List<Bookmark> bookmarkList = new ArrayList<>();
         bookmarkList.add(this.newBookmark("displayName1", "workspaceName1", "productName1", "appId1", "endpointName1", "query",
-                "hash", Bookmark.ScopeEnum.PUBLIC, null));
+                "hash", BookmarkScope.PUBLIC, null));
         bookmarkList.add(this.newBookmark("displayName2", "workspaceName2", "productName2", "appId2", "endpointName2", "query2",
-                "hash2", Bookmark.ScopeEnum.PUBLIC, null));
+                "hash2", BookmarkScope.PUBLIC, null));
         bookmarkPageResult.setStream(bookmarkList);
 
         mockServerClient
@@ -101,7 +101,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmarkSearchCriteriaDTO.setWorkspaceName("workspaceName1");
         bookmarkSearchCriteriaDTO.setProductName("productName1");
         bookmarkSearchCriteriaDTO.setAppId("appId1");
-        bookmarkSearchCriteriaDTO.setScope("PUBLIC");
+        bookmarkSearchCriteriaDTO.setScope(BookmarkScopeDTO.PUBLIC);
 
         // search the created bookmark
         var res = given()
@@ -125,7 +125,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
 
         BookmarkPageResult pageResult = new BookmarkPageResult();
         pageResult.setStream(
-                List.of(new Bookmark().scope(Bookmark.ScopeEnum.PRIVATE).displayName("bookmark1").workspaceName("workspace1")));
+                List.of(new Bookmark().scope(BookmarkScope.PRIVATE).displayName("bookmark1").workspaceName("workspace1")));
         pageResult.setSize(1);
         pageResult.setTotalPages(1L);
         pageResult.setTotalElements(1L);
@@ -167,9 +167,9 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmarkPageResult.setSize(50);
         List<Bookmark> bookmarkList = new ArrayList<>();
         bookmarkList.add(this.newBookmark("displayName1", "workspaceName1", "productName1", "appId1", "endpointName1", "query",
-                "hash", Bookmark.ScopeEnum.PUBLIC, null));
+                "hash", BookmarkScope.PUBLIC, null));
         bookmarkList.add(this.newBookmark("displayName2", "workspaceName2", "productName2", "appId2", "endpointName2", "query2",
-                "hash2", Bookmark.ScopeEnum.PUBLIC, null));
+                "hash2", BookmarkScope.PUBLIC, null));
         bookmarkPageResult.setStream(bookmarkList);
 
         mockServerClient
@@ -447,7 +447,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
 
     private Bookmark newBookmark(String displayName, String workspaceName, String productName, String appId,
             String endpointName,
-            String query, String hash, Bookmark.ScopeEnum scope, Map<String, String> endpointParameters) {
+            String query, String hash, BookmarkScope scope, Map<String, String> endpointParameters) {
         Bookmark bookmark = new Bookmark();
         bookmark.setDisplayName(displayName);
         bookmark.setWorkspaceName(workspaceName);
