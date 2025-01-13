@@ -57,7 +57,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
 
         var createBookmarkDTO = this.createBookmarkDTO("displayName1", "workspaceName1", "productName1", "appId1",
                 "endpointName1", "query",
-                "hash", CreateBookmarkDTO.ScopeEnum.PUBLIC, null);
+                "hash", BookmarkScopeDTO.PUBLIC, null);
 
         // bff call
         var response = given()
@@ -413,7 +413,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
 
     private CreateBookmark createBookmark(String displayName, String workspaceName, String productName, String appId,
             String endpointName,
-            String query, String hash, CreateBookmark.ScopeEnum scope, Map<String, String> endpointParameters) {
+            String query, String hash, BookmarkScope scope, Map<String, String> endpointParameters) {
         CreateBookmark bookmark = new CreateBookmark();
         bookmark.setDisplayName(displayName);
         bookmark.setWorkspaceName(workspaceName);
@@ -430,7 +430,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
 
     private CreateBookmarkDTO createBookmarkDTO(String displayName, String workspaceName, String productName, String appId,
             String endpointName,
-            String query, String hash, CreateBookmarkDTO.ScopeEnum scope, Map<String, String> endpointParameters) {
+            String query, String hash, BookmarkScopeDTO scope, Map<String, String> endpointParameters) {
         CreateBookmarkDTO bookmarkDTO = new CreateBookmarkDTO();
         bookmarkDTO.setDisplayName(displayName);
         bookmarkDTO.setWorkspaceName(workspaceName);
