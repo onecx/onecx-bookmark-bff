@@ -21,9 +21,4 @@ public interface BookmarkMapper {
     BookmarkDTO map(Bookmark bookmark);
 
     UpdateBookmark map(UpdateBookmarkDTO updateBookmarkDTO);
-
-    @Mapping(target = "position", ignore = true)
-    @Mapping(target = "displayName", ignore = true)
-    @Mapping(target = "scope", constant = "PUBLIC")
-    UpdateBookmark convert(UpdateBookmarkDTO convertBookmarkDTO);
 }

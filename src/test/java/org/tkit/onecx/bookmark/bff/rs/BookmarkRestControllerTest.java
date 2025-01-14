@@ -227,34 +227,6 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
     }
 
     @Test
-    void convertBookmark() {
-        String id = "82689h23-9624-2234-c50b-8749d073c287";
-
-        mockServerClient
-                .when(request().withPath(BOOKMARK_SVC_INTERNAL_API_BASE_PATH + "/" + id)
-                        .withMethod(HttpMethod.PUT))
-                .withPriority(100)
-                .withId(MOCK_ID)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
-
-        UpdateBookmarkDTO updateBookmarkDTO = new UpdateBookmarkDTO();
-        updateBookmarkDTO.setModificationCount(1);
-        updateBookmarkDTO.setDisplayName("test");
-        updateBookmarkDTO.setPosition(1);
-        updateBookmarkDTO.setId("82689h23-9624-2234-c50b-8749d073c287");
-
-        given()
-                .when()
-                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .contentType(APPLICATION_JSON)
-                .body(updateBookmarkDTO)
-                .post("/convert")
-                .then()
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
-    }
-
-    @Test
     void deleteBookmark() {
         String id = "82689h23-9624-2234-c50b-8749d073c287";
 
