@@ -56,7 +56,7 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
 
         var createBookmarkDTO = this.createBookmarkDTO("displayName1", "workspaceName1", "productName1", "appId1",
-                "endpointName1", "query",
+                "endpointName1", Map.of("query1", "param"),
                 "hash", BookmarkScopeDTO.PUBLIC, null);
 
         // bff call
@@ -82,9 +82,11 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmarkPageResult.setTotalPages(3L);
         bookmarkPageResult.setSize(50);
         List<Bookmark> bookmarkList = new ArrayList<>();
-        bookmarkList.add(this.newBookmark("displayName1", "workspaceName1", "productName1", "appId1", "endpointName1", "query",
+        bookmarkList.add(this.newBookmark("displayName1", "workspaceName1", "productName1", "appId1", "endpointName1",
+                Map.of("query1", "param"),
                 "hash", BookmarkScope.PUBLIC, null));
-        bookmarkList.add(this.newBookmark("displayName2", "workspaceName2", "productName2", "appId2", "endpointName2", "query2",
+        bookmarkList.add(this.newBookmark("displayName2", "workspaceName2", "productName2", "appId2", "endpointName2",
+                Map.of("query1", "param"),
                 "hash2", BookmarkScope.PUBLIC, null));
         bookmarkPageResult.setStream(bookmarkList);
 
@@ -166,9 +168,11 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
         bookmarkPageResult.setTotalElements(20L);
         bookmarkPageResult.setSize(50);
         List<Bookmark> bookmarkList = new ArrayList<>();
-        bookmarkList.add(this.newBookmark("displayName1", "workspaceName1", "productName1", "appId1", "endpointName1", "query",
+        bookmarkList.add(this.newBookmark("displayName1", "workspaceName1", "productName1", "appId1", "endpointName1",
+                Map.of("query1", "param"),
                 "hash", BookmarkScope.PUBLIC, null));
-        bookmarkList.add(this.newBookmark("displayName2", "workspaceName2", "productName2", "appId2", "endpointName2", "query2",
+        bookmarkList.add(this.newBookmark("displayName2", "workspaceName2", "productName2", "appId2", "endpointName2",
+                Map.of("query1", "param"),
                 "hash2", BookmarkScope.PUBLIC, null));
         bookmarkPageResult.setStream(bookmarkList);
 
@@ -384,8 +388,8 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
     }
 
     private CreateBookmark createBookmark(String displayName, String workspaceName, String productName, String appId,
-            String endpointName,
-            String query, String hash, BookmarkScope scope, Map<String, String> endpointParameters) {
+            String endpointName, Map<String, String> query, String hash, BookmarkScope scope,
+            Map<String, String> endpointParameters) {
         CreateBookmark bookmark = new CreateBookmark();
         bookmark.setDisplayName(displayName);
         bookmark.setWorkspaceName(workspaceName);
@@ -401,8 +405,8 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
     }
 
     private CreateBookmarkDTO createBookmarkDTO(String displayName, String workspaceName, String productName, String appId,
-            String endpointName,
-            String query, String hash, BookmarkScopeDTO scope, Map<String, String> endpointParameters) {
+            String endpointName, Map<String, String> query, String hash, BookmarkScopeDTO scope,
+            Map<String, String> endpointParameters) {
         CreateBookmarkDTO bookmarkDTO = new CreateBookmarkDTO();
         bookmarkDTO.setDisplayName(displayName);
         bookmarkDTO.setWorkspaceName(workspaceName);
@@ -418,8 +422,8 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
     }
 
     private Bookmark newBookmark(String displayName, String workspaceName, String productName, String appId,
-            String endpointName,
-            String query, String hash, BookmarkScope scope, Map<String, String> endpointParameters) {
+            String endpointName, Map<String, String> query, String hash, BookmarkScope scope,
+            Map<String, String> endpointParameters) {
         Bookmark bookmark = new Bookmark();
         bookmark.setDisplayName(displayName);
         bookmark.setWorkspaceName(workspaceName);
