@@ -18,6 +18,7 @@ public interface BookmarkMapper {
     BookmarkPageResultDTO map(BookmarkPageResult bookmarkPageResult);
 
     @Mapping(target = "removeEndpointParametersItem", ignore = true)
+    @Mapping(target = "removeQueryItem", ignore = true)
     BookmarkDTO map(Bookmark bookmark);
 
     UpdateBookmark map(UpdateBookmarkDTO updateBookmarkDTO);
