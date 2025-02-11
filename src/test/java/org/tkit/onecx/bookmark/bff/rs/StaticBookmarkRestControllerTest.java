@@ -28,7 +28,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @TestHTTPEndpoint(StaticBookmarkRestController.class)
-public class StaticBookmarkRestControllerTest extends AbstractTest {
+class StaticBookmarkRestControllerTest extends AbstractTest {
 
     private static final String BOOKMARK_SVC_INTERNAL_API_BASE_PATH = "/internal/static/bookmarks";
 
@@ -331,15 +331,6 @@ public class StaticBookmarkRestControllerTest extends AbstractTest {
                 .delete(id)
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
-    }
-
-    private CreateStaticBookmark createStaticBookmark(String displayName, String workspaceName, String url) {
-        CreateStaticBookmark staticBookmark = new CreateStaticBookmark();
-        staticBookmark.setDisplayName(displayName);
-        staticBookmark.setWorkspaceName(workspaceName);
-        staticBookmark.setUrl(url);
-        staticBookmark.setPosition(1);
-        return staticBookmark;
     }
 
     private CreateStaticBookmarkDTO createStaticBookmarkDTO(String displayName, String workspaceName, String url) {
