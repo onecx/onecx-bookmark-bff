@@ -187,8 +187,7 @@
                            <goal>wget</goal>
                        </goals>
                        <configuration>
-<!--                           <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal-openapi.yaml</url>-->
-                           <url>https://raw.githubusercontent.com/JordenReuter/onecx-bookmark-svc/refs/heads/feature/static-bookmarks/src/main/openapi/onecx-bookmark-internal-openapi.yaml</url>
+                           <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal-openapi.yaml</url>
                            <outputDirectory>target/tmp/openapi</outputDirectory>
                            <outputFileName>onecx-bookmark-svc.yaml</outputFileName>
                            <skipCache>true</skipCache>
