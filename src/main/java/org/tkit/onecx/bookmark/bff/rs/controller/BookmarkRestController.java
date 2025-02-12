@@ -12,7 +12,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.bookmark.bff.rs.mappers.BookmarkMapper;
 import org.tkit.onecx.bookmark.bff.rs.mappers.ExceptionMapper;
-import org.tkit.onecx.bookmark.bff.rs.mappers.ProblemDetailMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.BookmarksInternalApiService;
@@ -31,9 +30,6 @@ public class BookmarkRestController implements BookmarksInternalApiService {
 
     @Inject
     BookmarkMapper bookmarkMapper;
-
-    @Inject
-    ProblemDetailMapper problemDetailMapper;
 
     @Inject
     ExceptionMapper exceptionMapper;
