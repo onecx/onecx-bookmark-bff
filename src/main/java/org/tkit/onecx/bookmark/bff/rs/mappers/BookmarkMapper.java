@@ -22,4 +22,13 @@ public interface BookmarkMapper {
     BookmarkDTO map(Bookmark bookmark);
 
     UpdateBookmark map(UpdateBookmarkDTO updateBookmarkDTO);
+
+    CreateStaticBookmark mapStatic(CreateStaticBookmarkDTO createStaticBookmarkDTO);
+
+    StaticBookmarkSearchCriteria mapStaticCriteria(StaticBookmarkSearchCriteriaDTO staticBookmarkSearchCriteriaDTO);
+
+    @Mapping(target = "removeStreamItem", ignore = true)
+    StaticBookmarkPageResultDTO mapStaticPageResult(StaticBookmarkPageResult bookmarkPageResult);
+
+    UpdateStaticBookmark updateStatic(UpdateStaticBookmarkDTO updateStaticBookmarkDTO);
 }
