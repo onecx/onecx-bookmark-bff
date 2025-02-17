@@ -209,252 +209,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /static/bookmarks:
-    post:
-      x-onecx:
-        permissions:
-          bookmark:
-            - write
-      tags:
-        - staticBookmarks
-      description: create static bookmark item
-      operationId: createNewStaticBookmark
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateStaticBookmark'
-      responses:
-        '201':
-          description: Bookmark created
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /static/bookmarks/search:
-    post:
-      x-onecx:
-        permissions:
-          bookmark:
-            - read
-      tags:
-        - staticBookmarks
-      description: search static bookmarks by criteria
-      operationId: searchStaticBookmarksByCriteria
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StaticBookmarkSearchCriteria'
-      responses:
-        '200':
-          description: A list of bookmarks
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StaticBookmarkPageResult'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /static/bookmarks/{id}:
-    put:
-      x-onecx:
-        permissions:
-          bookmark:
-            - write
-      tags:
-        - staticBookmarks
-      description: Update a static bookmark
-      operationId: updateStaticBookmark
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateStaticBookmark'
-      responses:
-        "204":
-          description: Bookmark updated
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-        "404":
-          description: Bookmark not found
-    delete:
-      x-onecx:
-        permissions:
-          bookmark:
-            - delete
-      tags:
-        - staticBookmarks
-      description: Delete a static bookmark by id
-      operationId: deleteStaticBookmarkById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /static/bookmarks/reorder:
-    post:
-      x-onecx:
-        permissions:
-          bookmark:
-            - write
-      tags:
-        - staticBookmarks
-      description: update order of static bookmarks
-      operationId: updateStaticBookmarksOrder
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StaticBookmarkReorderRequest'
-      responses:
-        "200":
-          description: UPDATED
-        "400":
-          description: BAD REQUEST
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
-    StaticBookmarkSearchCriteria:
-      required:
-        - workspaceName
-      type: object
-      properties:
-        workspaceName:
-          type: string
-        pageNumber:
-          format: int32
-          description: The number of page.
-          default: 0
-          type: integer
-        pageSize:
-          format: int32
-          description: The size of page
-          default: 100
-          maximum: 1000
-          type: integer
-    StaticBookmark:
-      required:
-        - id
-        - displayName
-        - workspaceName
-        - position
-      type: object
-      properties:
-        id:
-          type: string
-        modificationCount:
-          format: int32
-          type: integer
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        displayName:
-          type: string
-        url:
-          type: string
-        workspaceName:
-          type: string
-        position:
-          format: int32
-          type: integer
-    StaticBookmarkPageResult:
-      type: object
-      properties:
-        totalElements:
-          type: integer
-          format: int64
-          description: The total elements in the resource.
-        number:
-          type: integer
-          format: int32
-          default: 0
-        size:
-          type: integer
-          format: int32
-          default: 100
-          maximum: 1000
-        totalPages:
-          type: integer
-          format: int64
-        stream:
-          type: array
-          items:
-            $ref: '#/components/schemas/StaticBookmark'
-    CreateStaticBookmark:
-      required:
-        - displayName
-        - workspaceName
-        - position
-      type: object
-      properties:
-        displayName:
-          type: string
-        url:
-          type: string
-        workspaceName:
-          type: string
-        position:
-          format: int32
-          type: integer
-    UpdateStaticBookmark:
-      required:
-        - displayName
-        - modificationCount
-        - position
-      type: object
-      properties:
-        modificationCount:
-          format: int32
-          type: integer
-        scope:
-          $ref: '#/components/schemas/BookmarkScope'
-        displayName:
-          type: string
-        position:
-          format: int32
-          type: integer
-        url:
-          type: string
-        id:
-          type: string
     BookmarkReorderRequest:
       type: object
       properties:
@@ -462,13 +218,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UpdateBookmark'
-    StaticBookmarkReorderRequest:
-      type: object
-      properties:
-        bookmarks:
-          type: array
-          items:
-            $ref: '#/components/schemas/UpdateStaticBookmark'
     BookmarkSearchCriteria:
       required:
         - workspaceName
@@ -497,8 +246,6 @@ components:
       required:
         - id
         - displayName
-        - productName
-        - appId
         - scope
         - workspaceName
         - position
@@ -529,7 +276,9 @@ components:
           type: object
           additionalProperties:
             type: string
-        hash:
+        fragment:
+          type: string
+        url:
           type: string
         userId:
           type: string
@@ -571,7 +320,6 @@ components:
       required:
         - displayName
         - workspaceName
-        - productName
         - scope
         - position
       type: object
@@ -588,7 +336,9 @@ components:
           type: object
           additionalProperties:
             type: string
-        hash:
+        fragment:
+          type: string
+        url:
           type: string
         userId:
           type: string
@@ -633,7 +383,9 @@ components:
           type: object
           additionalProperties:
             type: string
-        hash:
+        fragment:
+          type: string
+        url:
           type: string
         userId:
           type: string
