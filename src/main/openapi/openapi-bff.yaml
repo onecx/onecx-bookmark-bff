@@ -90,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookmarkPageResult'
+                $ref: '#/components/schemas/UserBookmarkPageResults'
         '400':
           description: Bad request
           content:
@@ -567,6 +567,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Bookmark'
+    UserBookmarkPageResults:
+      type: object
+      properties:
+        bookmarks:
+          $ref: '#/components/schemas/BookmarkPageResult'
+        staticBookmarks:
+          $ref: '#/components/schemas/StaticBookmarkPageResult'
     CreateBookmark:
       required:
         - displayName

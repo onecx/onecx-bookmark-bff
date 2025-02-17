@@ -31,4 +31,11 @@ public interface BookmarkMapper {
     StaticBookmarkPageResultDTO mapStaticPageResult(StaticBookmarkPageResult bookmarkPageResult);
 
     UpdateStaticBookmark updateStatic(UpdateStaticBookmarkDTO updateStaticBookmarkDTO);
+
+    StaticBookmarkSearchCriteria mapToStaticCriteria(BookmarkSearchCriteriaDTO bookmarkSearchCriteriaDTO);
+
+    @Mapping(target = "staticBookmarks", source = "staticBookmarkPageResultDTO")
+    @Mapping(target = "bookmarks", source = "bookmarkPageResultDTO")
+    UserBookmarkPageResultsDTO mergePageResults(BookmarkPageResultDTO bookmarkPageResultDTO,
+            StaticBookmarkPageResultDTO staticBookmarkPageResultDTO);
 }

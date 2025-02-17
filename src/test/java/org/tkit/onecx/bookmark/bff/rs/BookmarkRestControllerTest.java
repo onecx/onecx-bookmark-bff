@@ -143,6 +143,22 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                         .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(pageResult)));
 
+        StaticBookmarkPageResult staticBookmarkPageResult = new StaticBookmarkPageResult();
+        staticBookmarkPageResult
+                .setStream(List.of(new StaticBookmark().workspaceName("workspace1").displayName("displayName").url("someUrl")));
+        staticBookmarkPageResult.setSize(1);
+        staticBookmarkPageResult.setTotalPages(1L);
+        staticBookmarkPageResult.setTotalElements(1L);
+
+        mockServerClient
+                .when(request().withPath("/internal/static/bookmarks/search")
+                        .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId("MOCK_STATIC")
+                .respond(httpRequest -> response().withStatusCode(OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(staticBookmarkPageResult)));
+
         BookmarkSearchCriteriaDTO bookmarkSearchCriteriaDTO = new BookmarkSearchCriteriaDTO();
         bookmarkSearchCriteriaDTO.setWorkspaceName("workspace1");
 
@@ -154,9 +170,11 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                 .body(bookmarkSearchCriteriaDTO)
                 .post("/user")
                 .then()
-                .statusCode(OK.getStatusCode()).extract().as(BookmarkPageResultDTO.class);
+                .statusCode(OK.getStatusCode()).extract().as(UserBookmarkPageResultsDTO.class);
 
-        Assertions.assertEquals(1, res.getStream().size());
+        Assertions.assertEquals(1, res.getBookmarks().getStream().size());
+        Assertions.assertEquals(1, res.getStaticBookmarks().getStream().size());
+        mockServerClient.clear("MOCK_STATIC");
     }
 
     @Test

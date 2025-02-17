@@ -17,7 +17,9 @@ import org.tkit.quarkus.log.cdi.LogService;
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.BookmarksInternalApiService;
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.*;
 import gen.org.tkit.onecx.bookmark.client.api.BookmarksInternalApi;
+import gen.org.tkit.onecx.bookmark.client.api.StaticBookmarksInternalApi;
 import gen.org.tkit.onecx.bookmark.client.model.BookmarkPageResult;
+import gen.org.tkit.onecx.bookmark.client.model.StaticBookmarkPageResult;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
@@ -27,6 +29,10 @@ public class BookmarkRestController implements BookmarksInternalApiService {
     @Inject
     @RestClient
     BookmarksInternalApi client;
+
+    @Inject
+    @RestClient
+    StaticBookmarksInternalApi staticBookmarkClient;
 
     @Inject
     BookmarkMapper bookmarkMapper;
@@ -59,10 +65,18 @@ public class BookmarkRestController implements BookmarksInternalApiService {
 
     @Override
     public Response searchUserBookmarksByCriteria(BookmarkSearchCriteriaDTO bookmarkSearchCriteriaDTO) {
+        BookmarkPageResultDTO bookmarkPageResultDTO;
+        UserBookmarkPageResultsDTO mergedPageResult;
         try (Response response = client.searchUserBookmarksByCriteria(bookmarkMapper.map(bookmarkSearchCriteriaDTO))) {
             BookmarkPageResult userBookmarkPageResult = response.readEntity(BookmarkPageResult.class);
-            BookmarkPageResultDTO bookmarkPageResultDTO = bookmarkMapper.map(userBookmarkPageResult);
-            return Response.status(Response.Status.OK).entity(bookmarkPageResultDTO).build();
+            bookmarkPageResultDTO = bookmarkMapper.map(userBookmarkPageResult);
+            try (Response staticResponse = staticBookmarkClient
+                    .searchStaticBookmarksByCriteria(bookmarkMapper.mapToStaticCriteria(bookmarkSearchCriteriaDTO))) {
+                StaticBookmarkPageResult staticBookmarkPageResult = staticResponse.readEntity(StaticBookmarkPageResult.class);
+                var staticBookmarkPageResultDTO = bookmarkMapper.mapStaticPageResult(staticBookmarkPageResult);
+                mergedPageResult = bookmarkMapper.mergePageResults(bookmarkPageResultDTO, staticBookmarkPageResultDTO);
+                return Response.status(Response.Status.OK).entity(mergedPageResult).build();
+            }
         }
     }
 
