@@ -206,6 +206,19 @@
                            <skipCache>true</skipCache>
                        </configuration>
                     </execution>
+                    <execution>
+                        <id>bookmark-svc-exim-v1</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-exim-v1-openapi.yaml</url>
+                            <outputDirectory>target/tmp/openapi</outputDirectory>
+                            <outputFileName>onecx-bookmark-svc-exim-v1.yaml</outputFileName>
+                            <skipCache>true</skipCache>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
