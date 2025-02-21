@@ -53,14 +53,15 @@ public interface BookmarkMapper {
     @Mapping(target = "position", ignore = true)
     EximBookmark map(EximBookmarkDTO bookmark);
 
-    default ImportBookmarkRequest mapImport(ImportBookmarkRequestDTO importBookmarkRequestDTO) {
+    default ImportBookmarkRequest mapImport(ImportBookmarksRequestDTO importBookmarkRequestDTO) {
         ImportBookmarkRequest request = new ImportBookmarkRequest();
-        request.setWorkspace(importBookmarkRequestDTO.getWorkspace());
+        request.setWorkspace(importBookmarkRequestDTO.getWorkspaceName());
         request.setImportMode(mapMode(importBookmarkRequestDTO.getImportMode()));
         request.setSnapshot(map(importBookmarkRequestDTO.getSnapshot()));
         request.getSnapshot().getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
-            eximBookmark.setWorkspaceName(importBookmarkRequestDTO.getWorkspace());
+            eximBookmark.setWorkspaceName(importBookmarkRequestDTO.getWorkspaceName());
             eximBookmark.setPosition(0);
+            eximBookmark.setScope(EximBookmarkScope.PRIVATE);
         }));
 
         return request;

@@ -102,9 +102,9 @@ class BookmarkEximRestControllerTest extends AbstractTest {
         BookmarkSnapshotDTO snapshotDTO = new BookmarkSnapshotDTO();
         snapshotDTO.setBookmarks(Map.of(EximBookmarkScopeDTO.PRIVATE.toString(),
                 List.of(new EximBookmarkDTO().scope(EximBookmarkScopeDTO.PRIVATE).url("someUrl"))));
-        ImportBookmarkRequestDTO requestDTO = new ImportBookmarkRequestDTO();
+        ImportBookmarksRequestDTO requestDTO = new ImportBookmarksRequestDTO();
         requestDTO.setSnapshot(snapshotDTO);
-        requestDTO.setWorkspace("workspace2");
+        requestDTO.setWorkspaceName("workspace2");
         requestDTO.setImportMode(EximModeDTO.OVERWRITE);
 
         given()
