@@ -58,6 +58,8 @@ public interface BookmarkMapper {
         request.setWorkspace(importBookmarkRequestDTO.getWorkspaceName());
         request.setImportMode(mapMode(importBookmarkRequestDTO.getImportMode()));
         request.setSnapshot(map(importBookmarkRequestDTO.getSnapshot()));
+        request.getSnapshot().getBookmarks().keySet()
+                .removeIf(key -> !importBookmarkRequestDTO.getScopes().contains(EximBookmarkScopeDTO.fromString(key)));
         request.getSnapshot().getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
             eximBookmark.setWorkspaceName(importBookmarkRequestDTO.getWorkspaceName());
             eximBookmark.setPosition(0);
