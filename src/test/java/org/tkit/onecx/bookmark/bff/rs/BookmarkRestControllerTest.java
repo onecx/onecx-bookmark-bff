@@ -89,9 +89,14 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                 Map.of("query1", "param"),
                 "fragment2", BookmarkScope.PUBLIC, null));
         bookmarkPageResult.setStream(bookmarkList);
-
+        BookmarkSearchCriteria criteria = new BookmarkSearchCriteria();
+        criteria.setWorkspaceName("workspaceName1");
+        criteria.setProductName("productName1");
+        criteria.setAppId("appId1");
+        criteria.setScope(BookmarkScope.PUBLIC);
         mockServerClient
                 .when(request().withPath(BOOKMARK_SVC_INTERNAL_API_BASE_PATH + "/search")
+                        .withBody(JsonBody.json(criteria))
                         .withMethod(HttpMethod.POST))
                 .withPriority(100)
                 .withId(MOCK_ID)
