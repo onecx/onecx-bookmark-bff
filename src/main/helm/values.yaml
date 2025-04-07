@@ -22,3 +22,7 @@ app:
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-bm:all, ocx-pm:read ]
+    microservice:
+      spec:
+        description: OneCX Bookmark Backend For Frontend
+        name: OneCX Bookmark BFF
