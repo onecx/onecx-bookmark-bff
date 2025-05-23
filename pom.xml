@@ -219,6 +219,19 @@
                             <skipCache>true</skipCache>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>bookmark-svc-image</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal-image-openapi.yaml</url>
+                            <outputDirectory>target/tmp/openapi</outputDirectory>
+                            <outputFileName>onecx-bookmark-image.yaml</outputFileName>
+                            <skipCache>true</skipCache>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

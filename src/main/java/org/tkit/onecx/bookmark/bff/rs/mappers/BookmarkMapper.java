@@ -10,6 +10,7 @@ import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.*;
 import gen.org.tkit.onecx.bookmark.client.model.*;
 import gen.org.tkit.onecx.bookmark.exim.v1.client.model.*;
+import gen.org.tkit.onecx.bookmark.image.client.model.ImageInfo;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public interface BookmarkMapper {
@@ -70,4 +71,8 @@ public interface BookmarkMapper {
     }
 
     EximMode mapMode(EximModeDTO importMode);
+
+    ImageInfoDTO mapImageInfo(ImageInfo imageInfo);
+
+    Image map(ImageDTO imageDTO);
 }
