@@ -18,7 +18,7 @@ org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
 %prod.quarkus.rest-client.onecx_product_store.url=http://onecx-product-store-svc:8080
 %prod.quarkus.rest-client.onecx_bookmark_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
 %prod.quarkus.rest-client.onecx_product_store.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
-%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
 quarkus.openapi-generator.codegen.spec.onecx_bookmark_svc_yaml.config-key=onecx_bookmark_svc
 quarkus.openapi-generator.codegen.spec.onecx_bookmark_svc_yaml.base-package=gen.org.tkit.onecx.bookmark.client
@@ -72,6 +72,8 @@ Default values
 ----
 app:
   name: bff
+  template:
+    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-bookmark-bff"
   operator:
