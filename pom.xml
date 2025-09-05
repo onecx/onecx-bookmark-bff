@@ -187,7 +187,7 @@
                            <goal>wget</goal>
                        </goals>
                        <configuration>
-                           <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal-openapi.yaml</url>
+                           <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal.yaml</url>
                            <outputDirectory>target/tmp/openapi</outputDirectory>
                            <outputFileName>onecx-bookmark-svc.yaml</outputFileName>
                            <skipCache>true</skipCache>
@@ -213,7 +213,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-exim-v1-openapi.yaml</url>
+                            <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-exim-v1.yaml</url>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-bookmark-svc-exim-v1.yaml</outputFileName>
                             <skipCache>true</skipCache>
@@ -226,7 +226,7 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal-image-openapi.yaml</url>
+                            <url>https://raw.githubusercontent.com/onecx/onecx-bookmark-svc/main/src/main/openapi/onecx-bookmark-internal-image.yaml</url>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-bookmark-image.yaml</outputFileName>
                             <skipCache>true</skipCache>
