@@ -102,17 +102,15 @@ class BookmarkEximRestControllerTest extends AbstractTest {
         BookmarkSnapshotDTO snapshotDTO = new BookmarkSnapshotDTO();
         snapshotDTO.setBookmarks(Map.of(EximBookmarkScopeDTO.PRIVATE.toString(),
                 List.of(new EximBookmarkDTO().scope(EximBookmarkScopeDTO.PRIVATE).url("someUrl"))));
-        ImportBookmarksRequestDTO requestDTO = new ImportBookmarksRequestDTO();
-        requestDTO.setSnapshot(snapshotDTO);
-        requestDTO.setScopes(List.of(EximBookmarkScopeDTO.PRIVATE));
 
         given()
                 .contentType(APPLICATION_JSON)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .body(requestDTO)
+                .body(snapshotDTO)
                 .pathParam("workspaceName", "workspace2")
                 .queryParam("importMode", EximModeDTO.OVERWRITE)
+                .queryParam("scopes", List.of(EximBookmarkScopeDTO.PRIVATE))
                 .post("/{workspaceName}/import")
                 .then()
                 .statusCode(OK.getStatusCode());

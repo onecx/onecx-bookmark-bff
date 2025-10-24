@@ -53,10 +53,10 @@ public interface BookmarkMapper {
     @Mapping(target = "position", ignore = true)
     EximBookmark map(EximBookmarkDTO bookmark);
 
-    default BookmarkSnapshot mapImport(ImportBookmarksRequestDTO importBookmarkRequestDTO) {
-        BookmarkSnapshot request = map(importBookmarkRequestDTO.getSnapshot());
+    default BookmarkSnapshot mapImport(BookmarkSnapshotDTO bookmarkSnapshotDTO, List<EximBookmarkScopeDTO> scopes) {
+        BookmarkSnapshot request = map(bookmarkSnapshotDTO);
         request.getBookmarks().keySet()
-                .removeIf(key -> !importBookmarkRequestDTO.getScopes().contains(EximBookmarkScopeDTO.fromString(key)));
+                .removeIf(key -> !scopes.contains(EximBookmarkScopeDTO.fromString(key)));
         request.getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
             eximBookmark.setPosition(0);
             eximBookmark.setScope(EximBookmarkScope.PRIVATE);
