@@ -88,32 +88,30 @@ class BookmarkEximRestControllerTest extends AbstractTest {
         BookmarkSnapshot snapshot = new BookmarkSnapshot();
         snapshot.setBookmarks(Map.of(EximBookmarkScope.PRIVATE.toString(),
                 List.of(new EximBookmark().scope(EximBookmarkScope.PRIVATE).url("someUrl"))));
-        ImportBookmarkRequest request = new ImportBookmarkRequest();
-        request.setSnapshot(snapshot);
-        request.setWorkspace("workspace2");
-        request.setImportMode(EximMode.OVERWRITE);
 
         // create mock rest endpoint
-        mockServerClient.when(request().withPath(BOOKMARK_SVC_EXIM_API_BASE_PATH + "/import").withMethod(HttpMethod.POST)
-                .withBody(JsonBody.json(request)))
+        mockServerClient
+                .when(request()
+                        .withPath(BOOKMARK_SVC_EXIM_API_BASE_PATH + "/workspace2/import")
+                        .withQueryStringParameter("importMode", "OVERWRITE")
+                        .withMethod(HttpMethod.POST)
+                        .withBody(JsonBody.json(snapshot)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
 
         BookmarkSnapshotDTO snapshotDTO = new BookmarkSnapshotDTO();
         snapshotDTO.setBookmarks(Map.of(EximBookmarkScopeDTO.PRIVATE.toString(),
                 List.of(new EximBookmarkDTO().scope(EximBookmarkScopeDTO.PRIVATE).url("someUrl"))));
-        ImportBookmarksRequestDTO requestDTO = new ImportBookmarksRequestDTO();
-        requestDTO.setSnapshot(snapshotDTO);
-        requestDTO.setWorkspaceName("workspace2");
-        requestDTO.setImportMode(EximModeDTO.OVERWRITE);
-        requestDTO.setScopes(List.of(EximBookmarkScopeDTO.PRIVATE));
 
         given()
                 .contentType(APPLICATION_JSON)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .body(requestDTO)
-                .post("/import")
+                .body(snapshotDTO)
+                .pathParam("workspaceName", "workspace2")
+                .queryParam("importMode", EximModeDTO.OVERWRITE)
+                .queryParam("scopes", List.of(EximBookmarkScopeDTO.PRIVATE))
+                .post("/{workspaceName}/import")
                 .then()
                 .statusCode(OK.getStatusCode());
     }
@@ -124,7 +122,8 @@ class BookmarkEximRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .post("/import")
+                .pathParam("workspaceName", "workspace2")
+                .post("/{workspaceName}/import")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
     }

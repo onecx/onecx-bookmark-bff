@@ -1,5 +1,7 @@
 package org.tkit.onecx.bookmark.bff.rs.controller;
 
+import java.util.List;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -15,9 +17,7 @@ import org.tkit.onecx.bookmark.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.BookmarkExportImportApiService;
-import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.ExportBookmarksRequestDTO;
-import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.ImportBookmarksRequestDTO;
-import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.*;
 import gen.org.tkit.onecx.bookmark.exim.v1.client.api.BookmarkExportImportApi;
 import gen.org.tkit.onecx.bookmark.exim.v1.client.model.BookmarkSnapshot;
 
@@ -45,8 +45,10 @@ public class BookmarkEximRestController implements BookmarkExportImportApiServic
     }
 
     @Override
-    public Response importBookmarks(ImportBookmarksRequestDTO importBookmarkRequestDTO) {
-        try (Response response = exportImportApi.importBookmarks(bookmarkMapper.mapImport(importBookmarkRequestDTO))) {
+    public Response importBookmarks(String workspaceName, BookmarkSnapshotDTO bookmarkSnapshotDTO, EximModeDTO importMode,
+            List<EximBookmarkScopeDTO> scopes) {
+        try (Response response = exportImportApi.importBookmarks(workspaceName,
+                bookmarkMapper.mapImport(bookmarkSnapshotDTO, scopes), bookmarkMapper.mapMode(importMode))) {
             return Response.status(response.getStatus()).build();
         }
     }

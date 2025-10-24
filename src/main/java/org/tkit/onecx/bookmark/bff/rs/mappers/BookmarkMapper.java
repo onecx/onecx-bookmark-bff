@@ -49,20 +49,15 @@ public interface BookmarkMapper {
     @Mapping(target = "removeEndpointParametersItem", ignore = true)
     EximBookmarkDTO map(EximBookmark bookmark);
 
-    @Mapping(target = "workspaceName", ignore = true)
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "position", ignore = true)
     EximBookmark map(EximBookmarkDTO bookmark);
 
-    default ImportBookmarkRequest mapImport(ImportBookmarksRequestDTO importBookmarkRequestDTO) {
-        ImportBookmarkRequest request = new ImportBookmarkRequest();
-        request.setWorkspace(importBookmarkRequestDTO.getWorkspaceName());
-        request.setImportMode(mapMode(importBookmarkRequestDTO.getImportMode()));
-        request.setSnapshot(map(importBookmarkRequestDTO.getSnapshot()));
-        request.getSnapshot().getBookmarks().keySet()
-                .removeIf(key -> !importBookmarkRequestDTO.getScopes().contains(EximBookmarkScopeDTO.fromString(key)));
-        request.getSnapshot().getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
-            eximBookmark.setWorkspaceName(importBookmarkRequestDTO.getWorkspaceName());
+    default BookmarkSnapshot mapImport(BookmarkSnapshotDTO bookmarkSnapshotDTO, List<EximBookmarkScopeDTO> scopes) {
+        BookmarkSnapshot request = map(bookmarkSnapshotDTO);
+        request.getBookmarks().keySet()
+                .removeIf(key -> !scopes.contains(EximBookmarkScopeDTO.fromString(key)));
+        request.getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
             eximBookmark.setPosition(0);
             eximBookmark.setScope(EximBookmarkScope.PRIVATE);
         }));
