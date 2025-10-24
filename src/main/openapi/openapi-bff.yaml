@@ -201,7 +201,7 @@ paths:
                 $ref: '#/components/schemas/BookmarkSnapshot'
         "404":
           description: Bookmarks not found
-  /bookmarks/import:
+  /bookmarks/{workspaceName}/import:
     post:
       x-onecx:
         permissions:
@@ -211,6 +211,16 @@ paths:
         - bookmarkExportImport
       description: Import bookmarks
       operationId: importBookmarks
+      parameters:
+        - in: path
+          name: workspaceName
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: importMode
+          schema:
+            $ref: '#/components/schemas/EximMode'
       requestBody:
         required: true
         content:
@@ -347,10 +357,6 @@ components:
       properties:
         snapshot:
           $ref: '#/components/schemas/BookmarkSnapshot'
-        importMode:
-          $ref: '#/components/schemas/EximMode'
-        workspaceName:
-          type: string
         scopes:
           type: array
           minItems: 1

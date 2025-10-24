@@ -15,6 +15,7 @@ import org.tkit.onecx.bookmark.bff.rs.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.BookmarkExportImportApiService;
+import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.EximModeDTO;
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.ExportBookmarksRequestDTO;
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.ImportBookmarksRequestDTO;
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.ProblemDetailResponseDTO;
@@ -45,8 +46,10 @@ public class BookmarkEximRestController implements BookmarkExportImportApiServic
     }
 
     @Override
-    public Response importBookmarks(ImportBookmarksRequestDTO importBookmarkRequestDTO) {
-        try (Response response = exportImportApi.importBookmarks(bookmarkMapper.mapImport(importBookmarkRequestDTO))) {
+    public Response importBookmarks(String workspaceName, ImportBookmarksRequestDTO importBookmarksRequestDTO,
+            EximModeDTO importMode) {
+        try (Response response = exportImportApi.importBookmarks(workspaceName,
+                bookmarkMapper.mapImport(importBookmarksRequestDTO), bookmarkMapper.mapMode(importMode))) {
             return Response.status(response.getStatus()).build();
         }
     }
