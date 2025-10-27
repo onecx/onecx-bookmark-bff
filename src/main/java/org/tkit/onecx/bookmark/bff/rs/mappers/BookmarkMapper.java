@@ -12,7 +12,7 @@ import gen.org.tkit.onecx.bookmark.client.model.*;
 import gen.org.tkit.onecx.bookmark.exim.v1.client.model.*;
 import gen.org.tkit.onecx.bookmark.image.client.model.ImageInfo;
 
-@Mapper(uses = { OffsetDateTimeMapper.class })
+@Mapper(uses = { OffsetDateTimeMapper.class, TargetMapper.class })
 public interface BookmarkMapper {
 
     CreateBookmark map(CreateBookmarkDTO createBookmarkDTO);
@@ -57,10 +57,8 @@ public interface BookmarkMapper {
         BookmarkSnapshot request = map(bookmarkSnapshotDTO);
         request.getBookmarks().keySet()
                 .removeIf(key -> !scopes.contains(EximBookmarkScopeDTO.fromString(key)));
-        request.getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
-            eximBookmark.setPosition(0);
-            eximBookmark.setScope(EximBookmarkScope.PRIVATE);
-        }));
+        request.getBookmarks().values()
+                .forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> eximBookmark.setPosition(0)));
 
         return request;
     }
