@@ -57,9 +57,8 @@ public interface BookmarkMapper {
         BookmarkSnapshot request = map(bookmarkSnapshotDTO);
         request.getBookmarks().keySet()
                 .removeIf(key -> !scopes.contains(EximBookmarkScopeDTO.fromString(key)));
-        request.getBookmarks().values().forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> {
-            eximBookmark.setPosition(0);
-        }));
+        request.getBookmarks().values()
+                .forEach(eximBookmarks -> eximBookmarks.forEach(eximBookmark -> eximBookmark.setPosition(0)));
 
         return request;
     }
