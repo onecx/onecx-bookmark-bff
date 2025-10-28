@@ -47,8 +47,9 @@ public class BookmarkEximRestController implements BookmarkExportImportApiServic
     @Override
     public Response importBookmarks(String workspaceName, BookmarkSnapshotDTO bookmarkSnapshotDTO, EximModeDTO importMode,
             List<EximBookmarkScopeDTO> scopes) {
+        var mode = bookmarkMapper.mapMode(importMode);
         try (Response response = exportImportApi.importBookmarks(workspaceName,
-                bookmarkMapper.mapImport(bookmarkSnapshotDTO, scopes), bookmarkMapper.mapMode(importMode))) {
+                bookmarkMapper.mapImport(bookmarkSnapshotDTO, scopes, mode), mode)) {
             return Response.status(response.getStatus()).build();
         }
     }
