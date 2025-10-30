@@ -1,5 +1,6 @@
 package org.tkit.onecx.bookmark.bff.rs.mappers;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,11 @@ public interface BookmarkMapper {
 
     Map<String, List<EximBookmark>> mapBookmarkMapDTO(Map<String, List<EximBookmarkDTO>> bookmarks);
 
-    List<EximBookmarkDTO> map(List<EximBookmark> bookmarks);
+    default List<EximBookmarkDTO> map(List<EximBookmark> bookmarks) {
+        return bookmarks.stream()
+                .sorted(Comparator.comparingInt(EximBookmark::getPosition))
+                .map(this::map).toList();
+    }
 
     List<EximBookmark> mapEximDTOList(List<EximBookmarkDTO> bookmarks);
 
