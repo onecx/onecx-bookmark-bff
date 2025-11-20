@@ -27,7 +27,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @TestHTTPEndpoint(BookmarkRestController.class)
-public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.AbstractTest {
+class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.AbstractTest {
 
     private static final String BOOKMARK_SVC_INTERNAL_API_BASE_PATH = "/internal/bookmarks";
 
@@ -390,23 +390,6 @@ public class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.A
                 .delete(id)
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
-    }
-
-    private CreateBookmark createBookmark(String displayName, String workspaceName, String productName, String appId,
-            String endpointName, Map<String, String> query, String fragment, BookmarkScope scope,
-            Map<String, String> endpointParameters) {
-        CreateBookmark bookmark = new CreateBookmark();
-        bookmark.setDisplayName(displayName);
-        bookmark.setWorkspaceName(workspaceName);
-        bookmark.setProductName(productName);
-        bookmark.setAppId(appId);
-        bookmark.setEndpointName(endpointName);
-        bookmark.setEndpointParameters(endpointParameters);
-        bookmark.setQuery(query);
-        bookmark.setFragment(fragment);
-        bookmark.setScope(scope);
-        bookmark.setPosition(1);
-        return bookmark;
     }
 
     private CreateBookmarkDTO createBookmarkDTO(String displayName, String workspaceName, String productName, String appId,

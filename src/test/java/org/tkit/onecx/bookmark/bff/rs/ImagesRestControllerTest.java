@@ -31,7 +31,7 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 
 @QuarkusTest
 @TestHTTPEndpoint(ImagesRestController.class)
-public class ImagesRestControllerTest extends AbstractTest {
+class ImagesRestControllerTest extends AbstractTest {
 
     KeycloakTestClient keycloakClient = new KeycloakTestClient();
 
@@ -57,7 +57,7 @@ public class ImagesRestControllerTest extends AbstractTest {
     }
 
     @Test
-    public void getProductLogo_Test() {
+    void getProductLogo_Test() {
         System.out.println("LOGO_CALLED");
 
         var refId = "productName";
@@ -91,7 +91,7 @@ public class ImagesRestControllerTest extends AbstractTest {
     }
 
     @Test
-    public void getProductLogo_Empty_Body_Test() {
+    void getProductLogo_Empty_Body_Test() {
 
         var refId = "productName";
         byte[] bytesRes = new byte[] {};
@@ -119,7 +119,7 @@ public class ImagesRestControllerTest extends AbstractTest {
     }
 
     @Test
-    public void getProductLogo_Missing_ContentType_Test() {
+    void getProductLogo_Missing_ContentType_Test() {
 
         var refId = "productName";
         byte[] bytesRes = new byte[] { (byte) 0xe0, 0x4f, (byte) 0xd0,
