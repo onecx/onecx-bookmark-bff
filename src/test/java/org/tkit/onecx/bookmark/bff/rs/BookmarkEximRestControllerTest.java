@@ -23,6 +23,7 @@ import org.tkit.onecx.bookmark.bff.rs.controller.BookmarkEximRestController;
 
 import gen.org.tkit.onecx.bookmark.bff.rs.internal.model.*;
 import gen.org.tkit.onecx.bookmark.exim.v1.client.model.*;
+import gen.org.tkit.onecx.permission.model.ProblemDetailResponse;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -135,6 +136,7 @@ class BookmarkEximRestControllerTest extends AbstractTest {
                 .withBody(JsonBody.json(new ExportBookmarksRequest().workspaceName("w1"))))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(BAD_REQUEST.getStatusCode())
+                        .withBody(JsonBody.json(new ProblemDetailResponse().detail("test")))
                         .withContentType(MediaType.APPLICATION_JSON));
         given()
                 .contentType(APPLICATION_JSON)
