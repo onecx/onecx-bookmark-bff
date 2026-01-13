@@ -1,8 +1,7 @@
 include::onecx-bookmark-bff-attributes.adoc[opts=optional]
 
-== onecx-bookmark-bff
+= OneCX Bookmark Backend For Frontend
 
-include::docs.adoc[opts=optional]
 
 
 include::onecx-bookmark-bff-docs.adoc[opts=optional]
