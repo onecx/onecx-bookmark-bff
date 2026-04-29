@@ -40,7 +40,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
     void resetMockserver() {
         try {
             mockServerClient.clear(MOCK_ID);
-        } catch (Exception ex) {
+        } catch (Exception _) {
             // mockId not existing
         }
     }
