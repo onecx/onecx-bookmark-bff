@@ -66,7 +66,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(createBookmarkDTO)
-                .post()
+                .post("/bookmarks")
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
@@ -117,7 +117,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(bookmarkSearchCriteriaDTO)
-                .post("/search")
+                .post("/bookmarks/search")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -157,7 +157,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(bookmarkSearchCriteriaDTO)
-                .post("/user")
+                .post("/bookmarks/user")
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(BookmarkPageResultDTO.class);
 
@@ -200,7 +200,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(bookmarkSearchCriteriaDTO)
-                .post("/search")
+                .post("/bookmarks/search")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
 
@@ -229,7 +229,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(updateBookmarkDTO)
-                .put(id)
+                .put("/bookmarks/" + id)
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
@@ -251,7 +251,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .delete(id)
+                .delete("/bookmarks/" + id)
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
@@ -279,7 +279,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .delete(id)
+                .delete("/bookmarks/" + id)
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -340,7 +340,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .body(reorderRequestDTO)
                 .contentType(APPLICATION_JSON)
-                .post("/reorder")
+                .post("/bookmarks/reorder")
                 .then()
                 .statusCode(OK.getStatusCode());
         mockServerClient.clear("mock2");
@@ -356,7 +356,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .body(reorderRequestDTO)
                 .contentType(APPLICATION_JSON)
-                .post("/reorder")
+                .post("/bookmarks/reorder")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
 
@@ -377,7 +377,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(bookmarkSearchCriteriaDTO)
-                .post("/search")
+                .post("/bookmarks/search")
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
@@ -387,7 +387,7 @@ class BookmarkRestControllerTest extends org.tkit.onecx.bookmark.bff.rs.Abstract
                 .auth().oauth2(keycloakClient.getAccessToken(USER))
                 .header(APM_HEADER_PARAM, USER)
                 .contentType(APPLICATION_JSON)
-                .delete(id)
+                .delete("/bookmarks/" + id)
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
     }
