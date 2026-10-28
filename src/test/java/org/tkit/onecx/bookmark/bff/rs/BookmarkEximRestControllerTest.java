@@ -75,7 +75,7 @@ class BookmarkEximRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .body(requestDTO)
-                .post("/export")
+                .post("/bookmarks/export")
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract().as(BookmarkSnapshotDTO.class);
@@ -112,7 +112,7 @@ class BookmarkEximRestControllerTest extends AbstractTest {
                 .pathParam("workspaceName", "workspace2")
                 .queryParam("importMode", EximModeDTO.OVERWRITE)
                 .queryParam("scopes", List.of(EximBookmarkScopeDTO.PRIVATE))
-                .post("/{workspaceName}/import")
+                .post("/bookmarks/{workspaceName}/import")
                 .then()
                 .statusCode(OK.getStatusCode());
     }
@@ -124,7 +124,7 @@ class BookmarkEximRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .pathParam("workspaceName", "workspace2")
-                .post("/{workspaceName}/import")
+                .post("/bookmarks/{workspaceName}/import")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
     }
@@ -143,7 +143,7 @@ class BookmarkEximRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .body(new ExportBookmarksRequestDTO().workspaceName("w1"))
-                .post("/export")
+                .post("/bookmarks/export")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
     }
